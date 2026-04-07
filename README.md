@@ -13,4 +13,7 @@
    Julian Quispe
    Facundo Oliva
    Santiago Martinez
+   Facundo Zambrano
+   Valentin Marchetti
+   Mateo Barcelona
 
