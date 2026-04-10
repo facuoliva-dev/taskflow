@@ -27,4 +27,27 @@ public class TaskService
 
         return task;
     }
+    public List<TaskItem> GetTasks(TaskStatus? filter = null)
+    {
+        if (filter.HasValue)
+        {
+            return tasks.Where(t => t.Status == filter.Value).ToList();
+        }
+
+        return tasks;
+    }
+
+    public bool UpdateStatus(int id, TaskStatus newStatus)
+    {
+        var task = tasks.FirstOrDefault(t => t.Id == id);
+
+        if (task != null)
+        {
+            task.Status = newStatus;
+            task.UpdatedAt = DateTime.Now;
+            return true;
+        }
+
+        return false;
+    }
 }
