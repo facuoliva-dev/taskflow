@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using TaskFlow.Models; 
+using TaskFlow.Models;
 public class TaskService
 {
     private List<TaskItem> tasks = new List<TaskItem>();
@@ -21,8 +21,8 @@ public class TaskService
             Title = title,
             Description = description,
             Responsible = responsible,
-            [cite_start]Status = TaskStatus.Pendiente, 
-            [cite_start]CreatedAt = DateTime.Now       
+            [cite_start]Status = TaskStatus.Pendiente,
+            [cite_start]CreatedAt = DateTime.Now
         };
 
         tasks.Add(task);
@@ -54,4 +54,17 @@ public class TaskService
 
         return false;
     }
+}
+public bool UpdateResponsible(int id, string newResponsible)
+{
+    var task = tasks.FirstOrDefault(t => t.Id == id);
+
+    if (task != null)
+    {
+        task.Responsible = newResponsible;
+        task.UpdatedAt = DateTime.Now;
+        return true;
+    }
+
+    return false;
 }
