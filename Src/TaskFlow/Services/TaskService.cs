@@ -11,7 +11,7 @@ public class TaskService
     {
         if (string.IsNullOrWhiteSpace(title))
         {
-            throw new ArgumentException("El título es obligatorio.");
+            throw new ArgumentException("El tï¿½tulo es obligatorio.");
         }
 
         var task = new TaskItem
