@@ -80,4 +80,17 @@ public bool UpdateResponsible(int id, string newResponsible)
 
         return false;
     }
+    public void SaveToFile(string path)
+    {
+        var json = System.Text.Json.JsonSerializer.Serialize(tasks);
+        System.IO.File.WriteAllText(path, json);
+    }
+    public void LoadFromFile(string path)
+    {
+        if (System.IO.File.Exists(path))
+        {
+            var json = System.IO.File.ReadAllText(path);
+            tasks = System.Text.Json.JsonSerializer.Deserialize<List<TaskItem>>(json) ?? new List<TaskItem>();
+        }
+    }
 }
