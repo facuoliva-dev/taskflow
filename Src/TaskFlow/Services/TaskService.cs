@@ -54,7 +54,7 @@ public class TaskService
 
         return false;
     }
-}
+
 public bool UpdateResponsible(int id, string newResponsible)
 {
     var task = tasks.FirstOrDefault(t => t.Id == id);
@@ -67,4 +67,17 @@ public bool UpdateResponsible(int id, string newResponsible)
     }
 
     return false;
+}
+    public bool DeleteTask(int id)
+    {
+        var task = tasks.FirstOrDefault(t => t.Id == id);
+
+        if (task != null)
+        {
+            tasks.Remove(task);
+            return true;
+        }
+
+        return false;
+    }
 }
