@@ -1,4 +1,5 @@
 using System.Text.Json;
+using taskflow.Models;
 
 namespace taskflow.Utils
 {
@@ -6,7 +7,7 @@ namespace taskflow.Utils
     {
         private string path = "data/tasks.json";
 
-        public List<string> Load()
+        public List<TaskItem> Load()
         {
             try
             {
@@ -22,15 +23,15 @@ namespace taskflow.Utils
 
                 string json = File.ReadAllText(path);
 
-                return JsonSerializer.Deserialize<List<string>>(json) ?? new List<string>();
+                return JsonSerializer.Deserialize<List<TaskItem>>(json) ?? new List<TaskItem>();
             }
             catch (Exception)
             {
-                return new List<string>();
+                return new List<TaskItem>();
             }
         }
 
-        public void Save(List<string> data)
+        public void Save(List<TaskItem> data)
         {
             try
             {
@@ -48,7 +49,3 @@ namespace taskflow.Utils
         }
     }
 }
-
-
-//cambiar despues de List<string> a List<TaskItem> 
-
