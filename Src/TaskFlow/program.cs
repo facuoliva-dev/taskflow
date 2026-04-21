@@ -1,24 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-
-class Tarea
-{
-    public int Id { get; set; }
-    public string Titulo { get; set; }
-    public string Responsable { get; set; }
-    public string Estado { get; set; }
-}
+using TaskFlow.Services;
+using TaskFlow.Models;
 
 class Program
 {
-    static List<Tarea> tareas = new List<Tarea>();
-    static int contadorId = 1;
-
     static void Main()
     {
-        int opcion;
+        var service = new TaskService();
+        bool exit = false;
 
-        do
+        while (!exit)
         {
             Console.WriteLine("===== TASKFLOW =====");
             Console.WriteLine("1. Crear tarea");
@@ -26,127 +17,79 @@ class Program
             Console.WriteLine("3. Actualizar estado");
             Console.WriteLine("4. Cambiar responsable");
             Console.WriteLine("5. Eliminar tarea");
-            Console.WriteLine("6. Salir");
+            Console.WriteLine("0. Salir");
             Console.Write("Elegí una opción: ");
 
-            opcion = int.Parse(Console.ReadLine());
+            var option = Console.ReadLine();
 
-            switch (opcion)
+            switch (option)
             {
-                case 1:
-                    CrearTarea();
+                case "1":
+                    Console.Write("Título: ");
+                    var titulo = Console.ReadLine();
+
+                    Console.Write("Descripción: ");
+                    var descripcion = Console.ReadLine();
+
+                    Console.Write("Responsable: ");
+                    var responsable = Console.ReadLine();
+
+                    var tarea = service.CreateTask(titulo, descripcion, responsable);
+                    Console.WriteLine($"✔ Tarea creada: {tarea.Title}");
                     break;
-                case 2:
-                    ListarTareas();
+
+                case "2":
+                    var tareas = service.GetAllTasks();
+                    foreach (var t in tareas)
+                    {
+                        Console.WriteLine($"ID: {t.Id} | {t.Title} | {t.Responsible} | {t.Status}");
+                    }
                     break;
-                case 3:
-                    ActualizarEstado();
+
+                case "3":
+                    Console.Write("ID de la tarea: ");
+                    int idEstado = int.Parse(Console.ReadLine());
+
+                    Console.WriteLine("1. Pendiente\n2. En progreso\n3. Completada");
+                    int estado = int.Parse(Console.ReadLine());
+
+                    string nuevoEstado = estado == 1 ? "Pending" :
+                                         estado == 2 ? "InProgress" :
+                                         "Completed";
+
+                    service.UpdateStatus(idEstado, nuevoEstado);
+                    Console.WriteLine("✔ Estado actualizado");
                     break;
-                case 4:
-                    CambiarResponsable();
+
+                case "4":
+                    Console.Write("ID de la tarea: ");
+                    int idResp = int.Parse(Console.ReadLine());
+
+                    Console.Write("Nuevo responsable: ");
+                    var nuevoResp = Console.ReadLine();
+
+                    service.UpdateResponsible(idResp, nuevoResp);
+                    Console.WriteLine("✔ Responsable actualizado");
                     break;
-                case 5:
-                    EliminarTarea();
+
+                case "5":
+                    Console.Write("ID de la tarea: ");
+                    int idDel = int.Parse(Console.ReadLine());
+
+                    service.DeleteTask(idDel);
+                    Console.WriteLine("✔ Tarea eliminada");
                     break;
-                case 6:
-                    Console.WriteLine("Saliendo...");
+
+                case "0":
+                    exit = true;
                     break;
+
                 default:
                     Console.WriteLine("Opción inválida");
                     break;
             }
 
             Console.WriteLine();
-
-        } while (opcion != 6);
-    }
-
-    static void CrearTarea()
-    {
-        Console.Write("Título: ");
-        string titulo = Console.ReadLine();
-
-        Console.Write("Responsable: ");
-        string responsable = Console.ReadLine();
-
-        tareas.Add(new Tarea
-        {
-            Id = contadorId++,
-            Titulo = titulo,
-            Responsable = responsable,
-            Estado = "Pendiente"
-        });
-
-        Console.WriteLine("✔ Tarea creada");
-    }
-
-    static void ListarTareas()
-    {
-        foreach (var t in tareas)
-        {
-            Console.WriteLine($"ID: {t.Id} | {t.Titulo} | {t.Responsable} | {t.Estado}");
-        }
-    }
-
-    static void ActualizarEstado()
-    {
-        Console.Write("ID de la tarea: ");
-        int id = int.Parse(Console.ReadLine());
-
-        var tarea = tareas.Find(t => t.Id == id);
-
-        if (tarea != null)
-        {
-            Console.WriteLine("1. Pendiente\n2. En progreso\n3. Completada");
-            int op = int.Parse(Console.ReadLine());
-
-            tarea.Estado = op == 1 ? "Pendiente" :
-                           op == 2 ? "En progreso" :
-                           "Completada";
-
-            Console.WriteLine("✔ Estado actualizado");
-        }
-        else
-        {
-            Console.WriteLine("Tarea no encontrada");
-        }
-    }
-
-    static void CambiarResponsable()
-    {
-        Console.Write("ID de la tarea: ");
-        int id = int.Parse(Console.ReadLine());
-
-        var tarea = tareas.Find(t => t.Id == id);
-
-        if (tarea != null)
-        {
-            Console.Write("Nuevo responsable: ");
-            tarea.Responsable = Console.ReadLine();
-
-            Console.WriteLine("✔ Responsable actualizado");
-        }
-        else
-        {
-            Console.WriteLine("Tarea no encontrada");
-        }
-    }
-
-    static void EliminarTarea()
-    {
-        Console.Write("ID de la tarea: ");
-        int id = int.Parse(Console.ReadLine());
-
-        var tarea = tareas.Find(t => t.Id == id);
-
-        if (tarea != null)
-        {
-            tareas.Remove(tarea);
-            Console.WriteLine("✔ Tarea eliminada");
-        }
-        else
-        {
-            Console.WriteLine("Tarea no encontrada");
         }
     }
 }
