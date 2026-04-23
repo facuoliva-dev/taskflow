@@ -8,15 +8,31 @@ namespace TaskFlow.Utils
 {
     public class FileManager
     {
-        private string path = "data/tasks.json";
+        private string path;
+
+        public FileManager()
+        {
+            // Ruta base del ejecutable
+            var basePath = AppDomain.CurrentDomain.BaseDirectory;
+
+            // Subimos hasta la raíz del proyecto
+            var projectPath = Path.GetFullPath(
+                Path.Combine(basePath, "..", "..", "..")
+            );
+
+            // Apuntamos a la carpeta Utils
+            path = Path.Combine(projectPath, "Utils", "tasks.json");
+        }
 
         public List<TaskItem> Load()
         {
             try
             {
-                if (!Directory.Exists("data"))
+                var directory = Path.GetDirectoryName(path);
+
+                if (!Directory.Exists(directory))
                 {
-                    Directory.CreateDirectory("data");
+                    Directory.CreateDirectory(directory);
                 }
 
                 if (!File.Exists(path))
@@ -28,8 +44,9 @@ namespace TaskFlow.Utils
 
                 return JsonSerializer.Deserialize<List<TaskItem>>(json) ?? new List<TaskItem>();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Console.WriteLine($"Error al leer el archivo: {ex.Message}");
                 return new List<TaskItem>();
             }
         }
@@ -38,6 +55,13 @@ namespace TaskFlow.Utils
         {
             try
             {
+                var directory = Path.GetDirectoryName(path);
+
+                if (!Directory.Exists(directory))
+                {
+                    Directory.CreateDirectory(directory);
+                }
+
                 string json = JsonSerializer.Serialize(data, new JsonSerializerOptions
                 {
                     WriteIndented = true
@@ -45,9 +69,9 @@ namespace TaskFlow.Utils
 
                 File.WriteAllText(path, json);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                Console.WriteLine("Error al guardar el archivo.");
+                Console.WriteLine($"Error al guardar el archivo: {ex.Message}");
             }
         }
     }
