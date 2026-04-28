@@ -48,14 +48,25 @@ class Program
 
                 case "3":
                     Console.Write("ID de la tarea: ");
-                    int idEstado = int.Parse(Console.ReadLine());
+                    if (!int.TryParse(Console.ReadLine(), out int idEstado))
+                    {
+                        Console.WriteLine("ID inválido");
+                        break;
+                    }
 
-                    Console.WriteLine("1. Pendiente\n2. En progreso\n3. Completada");
-                    int estado = int.Parse(Console.ReadLine());
+                    Console.WriteLine("1. Pendiente");
+                    Console.WriteLine("2. En progreso");
+                    Console.WriteLine("3. Completada");
 
-                    string nuevoEstado = estado == 1 ? "Pending" :
-                                         estado == 2 ? "InProgress" :
-                                         "Completed";
+                    if (!int.TryParse(Console.ReadLine(), out int estado))
+                    {
+                        Console.WriteLine("Estado inválido");
+                        break;
+                    }
+
+                    TaskStatus nuevoEstado = estado == 1 ? TaskStatus.Pendiente :
+                                             estado == 2 ? TaskStatus.EnProgreso :
+                                             TaskStatus.Completada;
 
                     service.UpdateStatus(idEstado, nuevoEstado);
                     Console.WriteLine("✔ Estado actualizado");
@@ -63,7 +74,11 @@ class Program
 
                 case "4":
                     Console.Write("ID de la tarea: ");
-                    int idResp = int.Parse(Console.ReadLine());
+                    if (!int.TryParse(Console.ReadLine(), out int idResp))
+                    {
+                        Console.WriteLine("ID inválido");
+                        break;
+                    }
 
                     Console.Write("Nuevo responsable: ");
                     var nuevoResp = Console.ReadLine();
@@ -74,7 +89,11 @@ class Program
 
                 case "5":
                     Console.Write("ID de la tarea: ");
-                    int idDel = int.Parse(Console.ReadLine());
+                    if (!int.TryParse(Console.ReadLine(), out int idDel))
+                    {
+                        Console.WriteLine("ID inválido");
+                        break;
+                    }
 
                     service.DeleteTask(idDel);
                     Console.WriteLine("✔ Tarea eliminada");
