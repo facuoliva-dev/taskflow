@@ -2,16 +2,26 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using TaskFlow.Models;
+using TaskFlow.Utils;
+
+namespace TaskFlow.Services;
 
 public class TaskService
 {
-    private List<TaskItem> tasks = new List<TaskItem>();
+    private List<TaskItem> tasks;
+    private FileManager fileManager;
+
+    public TaskService()
+    {
+        fileManager = new FileManager();
+        tasks = fileManager.Load(); // 🔥 carga desde JSON
+    }
 
     public TaskItem CreateTask(string title, string description, string responsible)
     {
         if (string.IsNullOrWhiteSpace(title))
         {
-            throw new ArgumentException("El t�tulo es obligatorio.");
+            throw new ArgumentException("El título es obligatorio.");
         }
 
         var task = new TaskItem
@@ -25,7 +35,14 @@ public class TaskService
         };
 
         tasks.Add(task);
+        fileManager.Save(tasks); // 🔥 guarda
+
         return task;
+    }
+
+    public List<TaskItem> GetAllTasks()
+    {
+        return tasks;
     }
 
     public List<TaskItem> GetTasks(TaskStatus? filter = null)
@@ -46,6 +63,9 @@ public class TaskService
         {
             task.Status = newStatus;
             task.UpdatedAt = DateTime.Now;
+
+            fileManager.Save(tasks); // 🔥 guarda
+
             return true;
         }
 
@@ -60,6 +80,9 @@ public class TaskService
         {
             task.Responsible = newResponsible;
             task.UpdatedAt = DateTime.Now;
+
+            fileManager.Save(tasks); // 🔥 guarda
+
             return true;
         }
 
@@ -73,28 +96,12 @@ public class TaskService
         if (task != null)
         {
             tasks.Remove(task);
+
+            fileManager.Save(tasks); // 🔥 guarda
+
             return true;
         }
 
         return false;
-    }
-
-    public void SaveToFile(string path)
-    {
-        var json = System.Text.Json.JsonSerializer.Serialize(tasks, new System.Text.Json.JsonSerializerOptions
-        {
-            WriteIndented = true
-        });
-
-        System.IO.File.WriteAllText(path, json);
-    }
-
-    public void LoadFromFile(string path)
-    {
-        if (System.IO.File.Exists(path))
-        {
-            var json = System.IO.File.ReadAllText(path);
-            tasks = System.Text.Json.JsonSerializer.Deserialize<List<TaskItem>>(json) ?? new List<TaskItem>();
-        }
     }
 }
