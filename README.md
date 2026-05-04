@@ -6,6 +6,18 @@ TaskFlow es una aplicación de consola desarrollada en C# que permite gestionar 
 
 ## Características
 
+👥Integrantes:
+   Julian Quispe
+   Facundo Oliva
+   Santiago Martinez
+   Facundo Zambrano
+   Valentin Marchetti
+   Mateo Barceló
+   
+   ## Cambios recientes
+
+- Se agregó validación de usuario
+
 - **Crear tareas**: Agregar nuevas tareas con título, descripción y responsable.
 - **Listar tareas**: Ver todas las tareas o filtrar por estado.
 - **Actualizar estado**: Cambiar el estado de una tarea existente.
