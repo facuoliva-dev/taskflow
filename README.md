@@ -16,4 +16,7 @@
    Facundo Zambrano
    Valentin Marchetti
    Mateo Barceló
+   
+   ## Cambios recientes
 
+- Se agregó validación de usuario
